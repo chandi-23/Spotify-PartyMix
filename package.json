@@ -1,0 +1,16 @@
+{
+  "name": "spx",
+  "version": "1.0.0",
+  "description": "SpotifyPartyMix",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Spotify",
+    "Party",
+    "Playlist"
+  ],
+  "author": "Chandresh Lokesha",
+  "license": "ISC"
+}
