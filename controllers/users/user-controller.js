@@ -3,7 +3,7 @@ import * as userDao from "./user-dao.js";
 const registerUser = async (req, res) => {
   try {
     const savedUser = await userDao.createUser(req.body);
-    req.session["currentUser"] = user;
+    req.session["currentUser"] = savedUser;
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,6 +20,8 @@ const loginUser = async (req, res) => {
     }
 
     req.session["currentUser"] = user;
+    console.log(req.session["currentUser"])
+    
     res.json({ message: "Login successful", user });
   } catch (error) {
     res.status(500).json({ error: error.message });
