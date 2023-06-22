@@ -1,1 +1,0 @@
-// Sound Engineer maintains after the speakers and equipments, troubleshooting

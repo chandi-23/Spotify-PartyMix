@@ -1,0 +1,6 @@
+npm init
+
+npm install mongoose
+npm install cors
+npm install express
+npm install express-session
