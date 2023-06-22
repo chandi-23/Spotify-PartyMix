@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "spx",
   "version": "1.0.0",
   "description": "SpotifyPartyMix",
@@ -12,5 +13,12 @@
     "Playlist"
   ],
   "author": "Chandresh Lokesha",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongoose": "^7.3.0"
+  },
+  "devDependencies": {}
 }
