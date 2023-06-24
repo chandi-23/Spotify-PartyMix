@@ -3,7 +3,7 @@ import * as userDao from "./user-dao.js";
 const registerUser = async (req, res) => {
   try {
     const savedUser = await userDao.createUser(req.body);
-    req.session["currentUser"] = user;
+    req.session["currentUser"] = savedUser;
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,6 +20,8 @@ const loginUser = async (req, res) => {
     }
 
     req.session["currentUser"] = user;
+    console.log(req.session["currentUser"])
+    
     res.json({ message: "Login successful", user });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -35,6 +37,15 @@ const getCurrentUser = (req, res) => {
     res.sendStatus(403);
   }
 };
+
+const getAllHosts = async (req, res) => {
+    try {
+      const hosts = await userDao.getUsersByUserType();
+      res.json(hosts);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve hosts' });
+    }
+  };
 
 const updateCurrentUser = async (req, res) => {
   try {
@@ -82,7 +93,8 @@ const getUserType = async (req, res) => {
 export default (app) => {
   app.post("/api/users/register", registerUser);
   app.post("/api/users/login", loginUser);
-  app.get("/api/users/current", getCurrentUser);
+  app.get("/api/users/profile", getCurrentUser);
+  app.get("/api/users/getAllHostDetails", getAllHosts);
   app.put("/api/users/current", updateCurrentUser);
   app.post("/api/users/logout", logoutUser);
   app.get("/api/users/usertype", getUserType);
