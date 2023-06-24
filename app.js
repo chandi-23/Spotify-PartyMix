@@ -12,13 +12,24 @@ app.use(express.json());
 app.set("trust proxy", 1);
 
 app.use(
+  session({
+    secret: "any string",
+    resave: false,
+    saveUninitialized: true,
+  })
+ );
+ 
+app.use(
   cors({
-    credentials: true
+    credentials: true,
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST","PUT","DELETE"]
   })
  );
  app.use(function (req, res, next) {
   res.header(
-      "Access-Control-Allow-Origin"
+      "Access-Control-Allow-Origin",
+      "http://localhost:3000"
   );
   res.header(
       "Access-Control-Allow-Headers",
@@ -27,24 +38,7 @@ app.use(
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, POST, DELETE, PATCH, OPTIONS");
   res.header("Access-Control-Allow-Credentials", "true");
   next();
-});
-
-app.use(
-    session({
-      secret: "any string",
-      resave: false,
-      proxy:true,
-      saveUninitialized: false,
-      store: new session.MemoryStore(),
-      cookie: {
-        sameSite: "none",
-        secure: true,
-        httpOnly:true
-      }
-    })
-   );
-  
-  
+});  
   mongoose.connect(CONNECTION_STRING)
   .then(() => {
     console.log("Connected");

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const partySchema = new mongoose.Schema({
-  partyName: {
+  title: {
     type: String,
     required: true
   },
@@ -17,10 +17,22 @@ const partySchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  start: {
+    type: Date,
+    required: true
+  },
+  end: {
+    type: Date,
+    required: true
+  },
+  allDay: {
+    type: String,
+    required: true
+  },
   hostName: {
     type: String,
     required: true
-  }
+  },
 },{collection:'party'});
 
 

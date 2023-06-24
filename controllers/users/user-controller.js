@@ -38,6 +38,15 @@ const getCurrentUser = (req, res) => {
   }
 };
 
+const getAllHosts = async (req, res) => {
+    try {
+      const hosts = await userDao.getUsersByUserType();
+      res.json(hosts);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve hosts' });
+    }
+  };
+
 const updateCurrentUser = async (req, res) => {
   try {
     const currentUser = req.session["currentUser"];
@@ -84,7 +93,8 @@ const getUserType = async (req, res) => {
 export default (app) => {
   app.post("/api/users/register", registerUser);
   app.post("/api/users/login", loginUser);
-  app.get("/api/users/current", getCurrentUser);
+  app.get("/api/users/profile", getCurrentUser);
+  app.get("/api/users/getAllHostDetails", getAllHosts);
   app.put("/api/users/current", updateCurrentUser);
   app.post("/api/users/logout", logoutUser);
   app.get("/api/users/usertype", getUserType);

@@ -4,7 +4,14 @@ import * as userDao from "./user-dao.js";
 
 const createParty = async (req, res) => {
   try {
-    const newParty = req.body;
+    const { date, ...rest } = req.body; // Extracting date from req.body
+    const newParty = {
+      ...rest,
+      date:date,
+      start: date,
+      end: date,
+      allDay: true,
+    };
     const savedParty = await partyDao.createParty(newParty);
     console.log(savedParty)
     res.status(201).json(savedParty);
@@ -108,10 +115,10 @@ const getAllParties = async (req, res) => {
 
 export default (app) => {
   app.post('/api/party/create', createParty);
-  app.get('/api/party/:id', getPartyById);
+  app.get('/api/party/all', getAllParties);
+  app.get('/api/party/get/:id', getPartyById);
   app.put('/api/party/:id', updateParty);
   app.delete('/api/party/:id', deleteParty);
-  app.get('/api/party/all', getAllParties);
   app.get('/api/party/join/:id', joinParty);
 };
 
