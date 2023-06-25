@@ -20,7 +20,8 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-
+    const userJsonString = JSON.stringify(user);
+    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
     
     res.json({ message: "Login successful", user });
   } catch (error) {
@@ -29,8 +30,8 @@ const loginUser = async (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const currentUser = req.session["currentUser"];
-  console.log(currentUser)
+  const userCookie = req.cookies.user;
+  const currentUser = JSON.parse(userCookie);
   if (currentUser) {
     res.json(currentUser);
   } else {
@@ -49,7 +50,8 @@ const getAllHosts = async (req, res) => {
 
 const updateCurrentUser = async (req, res) => {
   try {
-    const currentUser = req.session["currentUser"];
+    const userCookie = req.cookies.user;
+    const currentUser = JSON.parse(userCookie);
 
     if (!currentUser) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -61,8 +63,8 @@ const updateCurrentUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    req.session["currentUser"] = updatedUser;
-
+    const userJsonString = JSON.stringify(updatedUser);
+    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
     res.json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -70,14 +72,13 @@ const updateCurrentUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  req.session.destroy();
+  res.clearCookie('user');
   res.json({ message: "Logout successful" });
 };
 
 const getUserType = async (req, res) => {
   try {
     const username  = req.params.username;
-    console.log(username);
 
     if (!username) {
       return res.status(400).json({ error: "Username is required" });
