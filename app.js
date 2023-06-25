@@ -3,21 +3,17 @@ import cors from "cors";
 import session from "express-session";
 import userController from "./controllers/users/user-controller.js";
 import partyController from './controllers/users/party-controller.js';
+import commentController from './controllers/users/comment-controller.js';
 import mongoose from "mongoose";
+import cookieParser from 'cookie-parser';
 
 const app = express()
 const CONNECTION_STRING = 'mongodb+srv://maurya:maurya2609@cluster0.tfc9wmb.mongodb.net/SpotifyPartyMixer?retryWrites=true&w=majority';
 
 app.use(express.json());
+app.use(cookieParser());
 app.set("trust proxy", 1);
 
-app.use(
-  session({
-    secret: "any string",
-    resave: false,
-    saveUninitialized: true,
-  })
- );
  
 app.use(
   cors({
@@ -49,5 +45,6 @@ app.use(
 
 userController(app);
 partyController(app);
+commentController(app);
 
 app.listen(process.env.PORT || 4000);

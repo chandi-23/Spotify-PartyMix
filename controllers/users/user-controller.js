@@ -76,26 +76,30 @@ const logoutUser = (req, res) => {
 
 const getUserType = async (req, res) => {
   try {
-    const currentUser = req.session["currentUser"];
+    const username  = req.params.username;
+    console.log(username);
 
-    if (!currentUser) {
-      return res.status(401).json({ error: "Unauthorized" });
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const userType = await userDao.getUserType(currentUser._id);
-    console.log(userType);
-    res.json({ userType });
+    const user = await userDao.getUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ userType: user.usertype });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
 export default (app) => {
   app.post("/api/users/register", registerUser);
   app.post("/api/users/login", loginUser);
   app.get("/api/users/profile", getCurrentUser);
   app.get("/api/users/getAllHostDetails", getAllHosts);
-  app.put("/api/users/current", updateCurrentUser);
+  app.put("/api/users/profile", updateCurrentUser);
   app.post("/api/users/logout", logoutUser);
-  app.get("/api/users/usertype", getUserType);
+  app.get("/api/users/usertype/:username", getUserType);
 };

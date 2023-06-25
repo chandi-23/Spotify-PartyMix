@@ -3,22 +3,27 @@ import * as commentDao from './comment-dao.js';
 // Create a new comment
 export const createComment = async (req, res) => {
   try {
-    const { party_id, user_id, content } = req.body;
+    console.log(req.body)
+    const { hostName, comment } = req.body;
 
-    const comment = await commentDao.createComment(party_id, user_id, content);
-    res.status(201).json(comment);
+    const commentObj = await commentDao.createComment(hostName, comment);
+    res.status(201).json(commentObj);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get all comments for a party
-export const getCommentsByParty = async (req, res) => {
+
+export const getComments = async (req, res) => {
   try {
-    const party_id = req.params.party_id;
-    const comments = await commentDao.getCommentsByParty(party_id);
+    const comments = await commentDao.getComments();
     res.json(comments);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+};
+
+export default (app) => {
+  app.post('/api/comments/create', createComment);
+  app.get('/api/comments/getComments', getComments);
 };

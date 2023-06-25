@@ -1,16 +1,13 @@
-import CommentModel from '../models/comment-model.js';
+import CommentModel from '../models/comments-model.js'
 
 // Create a new comment
-export const createComment = async (party_id, user_id, content) => {
-  const comment = new CommentModel({
-    party_id,
-    user_id,
-    content
+export const createComment = async (hostName, comment) => {
+  const newComment = new CommentModel({
+    hostName,
+    comment
   });
-  return CommentModel.create(comment);
+  return CommentModel.create(newComment);
 };
 
 // Get all comments for a party
-export const getCommentsByParty = (party_id) => {
-  return CommentModel.findById(party_id);
-};
+export const getComments = () => CommentModel.find();
