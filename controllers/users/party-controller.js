@@ -116,6 +116,7 @@ const getAllParties = async (req, res) => {
 export default (app) => {
   app.post('/api/party/create', createParty);
   app.get('/api/party/all', getAllParties);
+  app.get('/api/users/getAllEventDetails', getAllParties);
   app.get('/api/party/get/:id', getPartyById);
   app.put('/api/party/:id', updateParty);
   app.delete('/api/party/:id', deleteParty);
