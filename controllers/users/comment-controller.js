@@ -25,5 +25,5 @@ export const getComments = async (req, res) => {
 
 export default (app) => {
   app.post('/api/comments/create', createComment);
-  app.get('/api/comments/getComments', getComments);
+  app.get('/api/users/getAllHostComments', getComments);
 };
