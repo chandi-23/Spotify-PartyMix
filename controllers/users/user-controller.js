@@ -3,9 +3,7 @@ import * as userDao from "./user-dao.js";
 const registerUser = async (req, res) => {
   try {
     const savedUser = await userDao.createUser(req.body);
-    const userJsonString = JSON.stringify(user);
-    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
-  
+    req.session["currentUser"] = savedUser;
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -20,8 +18,9 @@ const loginUser = async (req, res) => {
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    const userJsonString = JSON.stringify(user);
-    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
+
+    req.session["currentUser"] = user;
+    console.log(req.session["currentUser"])
     
     res.json({ message: "Login successful", user });
   } catch (error) {
@@ -30,8 +29,8 @@ const loginUser = async (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const userCookie = req.cookies.user;
-  const currentUser = JSON.parse(userCookie);
+  const currentUser = req.session["currentUser"];
+  console.log(currentUser)
   if (currentUser) {
     res.json(currentUser);
   } else {
@@ -50,8 +49,7 @@ const getAllHosts = async (req, res) => {
 
 const updateCurrentUser = async (req, res) => {
   try {
-    const userCookie = req.cookies.user;
-    const currentUser = JSON.parse(userCookie);
+    const currentUser = req.session["currentUser"];
 
     if (!currentUser) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -63,8 +61,8 @@ const updateCurrentUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const userJsonString = JSON.stringify(updatedUser);
-    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
+    req.session["currentUser"] = updatedUser;
+
     res.json(updatedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -72,13 +70,14 @@ const updateCurrentUser = async (req, res) => {
 };
 
 const logoutUser = (req, res) => {
-  res.clearCookie('user');
+  req.session.destroy();
   res.json({ message: "Logout successful" });
 };
 
 const getUserType = async (req, res) => {
   try {
     const username  = req.params.username;
+    console.log(username);
 
     if (!username) {
       return res.status(400).json({ error: "Username is required" });
@@ -95,7 +94,6 @@ const getUserType = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 export default (app) => {
   app.post("/api/users/register", registerUser);
   app.post("/api/users/login", loginUser);
