@@ -3,7 +3,9 @@ import * as userDao from "./user-dao.js";
 const registerUser = async (req, res) => {
   try {
     const savedUser = await userDao.createUser(req.body);
-    req.session["currentUser"] = savedUser;
+    const userJsonString = JSON.stringify(user);
+    res.cookie('user', userJsonString, { maxAge: 3600000, httpOnly: true });
+  
     res.status(201).json(savedUser);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -19,8 +21,6 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    req.session["currentUser"] = user;
-    console.log(req.session["currentUser"])
     
     res.json({ message: "Login successful", user });
   } catch (error) {
@@ -76,15 +76,20 @@ const logoutUser = (req, res) => {
 
 const getUserType = async (req, res) => {
   try {
-    const currentUser = req.session["currentUser"];
+    const username  = req.params.username;
+    console.log(username);
 
-    if (!currentUser) {
-      return res.status(401).json({ error: "Unauthorized" });
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const userType = await userDao.getUserType(currentUser._id);
-    console.log(userType);
-    res.json({ userType });
+    const user = await userDao.getUserByUsername(username);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({ userType: user.usertype });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -97,5 +102,5 @@ export default (app) => {
   app.get("/api/users/getAllHostDetails", getAllHosts);
   app.put("/api/users/profile", updateCurrentUser);
   app.post("/api/users/logout", logoutUser);
-  app.get("/api/users/usertype", getUserType);
+  app.get("/api/users/usertype/:username", getUserType);
 };

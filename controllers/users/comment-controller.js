@@ -3,6 +3,7 @@ import * as commentDao from './comment-dao.js';
 // Create a new comment
 export const createComment = async (req, res) => {
   try {
+    console.log(req.body)
     const { hostName, comment } = req.body;
 
     const commentObj = await commentDao.createComment(hostName, comment);
