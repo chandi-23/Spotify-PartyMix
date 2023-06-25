@@ -95,7 +95,7 @@ export default (app) => {
   app.post("/api/users/login", loginUser);
   app.get("/api/users/profile", getCurrentUser);
   app.get("/api/users/getAllHostDetails", getAllHosts);
-  app.put("/api/users/current", updateCurrentUser);
+  app.put("/api/users/profile", updateCurrentUser);
   app.post("/api/users/logout", logoutUser);
   app.get("/api/users/usertype", getUserType);
 };

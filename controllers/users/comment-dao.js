@@ -11,6 +11,4 @@ export const createComment = async (party_id, user_id, content) => {
 };
 
 // Get all comments for a party
-export const getCommentsByParty = (party_id) => {
-  return CommentModel.findById(party_id);
-};
+export const getComments = () => CommentModel.find();
